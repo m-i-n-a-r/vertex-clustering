@@ -11,6 +11,7 @@
 	- Data una pagina prendo tutti i subset di tag (sia aperti che chiusi) di lunghezza l=10
 	- Applico a ciascun subset le 8 funzioni di hash (da definire)
 	- Prendo il minimo per ciascuna funzione di hash e genero il vettore
+- Funzione per verificare il match tra due shingle vectors (dove uno dei due può contenere wildcard)
 	
 #### Altro file (principale) che esegue l'algoritmo vero e proprio
 - Primo passo
