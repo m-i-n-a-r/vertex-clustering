@@ -4,6 +4,8 @@ from shingle_utils import matching_vectors
 
 # NEEDED PARAMETERS
 
+page_shingle_dict = {}
+clusters = {}
 shingle_dict = {}
 pruning_treshold = 20 # default: 20
 
@@ -18,6 +20,7 @@ shingle_dict[tuple_shingle1] = 24
 shingle_dict[tuple_shingle2] = 1
 shingle_dict[tuple_shingle3] = 30
 shingle_dict[tuple_shingle4] = 2
+
 # STEP TWO
 
 # Order the dictionary by value
@@ -37,3 +40,13 @@ for vector in shingle_dict:
 shingle_dict = {key:val for key, val in shingle_dict.items() if val > pruning_treshold or '*' not in key}
         
 # STEP THREE
+
+# Put every masked vector in a new dictionary
+shingle_masked_dict = {key:val for key, val in shingle_dict.items() if '*' in key}
+# Initialite the clusters to an empty set
+for masked_vector in shingle_masked_dict:
+        clusters[masked_vector] = set()
+
+for shingle in page_shingle_dict:
+        clusters[shingle]
+
