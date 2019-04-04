@@ -6,11 +6,11 @@
 #### Passi preliminari ed algoritmi di supporto
 - [ ] Avere tutte le pagine di un sito in un file (csv, xml)
 - [ ] Funzione che seleziona casualmente il 20% delle pagine disponibili nel csv sopra
-- [ ] File che, data una pagina, calcola l'insieme degli shingle e il conseguente vettore di 8 byte
-	- [ ] Data una pagina prendo tutti i subset di tag (sia aperti che chiusi) di lunghezza l=10
-	- [ ] Applico a ciascun subset le 8 funzioni di hash (da definire)
-	- [ ] Prendo il minimo per ciascuna funzione di hash e genero il vettore
-- [ ] Funzione per verificare il match tra due shingle vectors (dove uno dei due può contenere wildcard)
+- [X] File che, data una pagina, calcola l'insieme degli shingle e il conseguente vettore di 8 byte
+	- [X] Data una pagina prendo tutti i subset di tag (sia aperti che chiusi) di lunghezza l=10
+	- [X] Applico a ciascun subset le 8 funzioni di hash (da definire)
+	- [X] Prendo il minimo per ciascuna funzione di hash e genero il vettore
+- [X] Funzione per verificare il match tra due shingle vectors (dove uno dei due può contenere wildcard)
 	
 #### Altro file (principale) che esegue l'algoritmo vero e proprio
 - [ ] Primo passo
