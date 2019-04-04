@@ -1,2 +1,6 @@
+# Log files
 *.log
-.mypy_cache/
+# Offline generated charts
+*.html
+# Python cache 
+__pycache__/

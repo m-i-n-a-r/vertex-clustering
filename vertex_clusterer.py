@@ -47,9 +47,11 @@ shingle_masked_dict = {key:val for key, val in shingle_dict.items() if '*' in ke
 for masked_vector in shingle_masked_dict:
         clusters[masked_vector] = set()
 
+# For every shingle in the pages dictionary, find the matching masked shingle vector with the best score
 for shingle in page_shingle_dict:
         matching_dict = matching_vectors(shingle, shingle_masked_dict)
         best_shingle = max(matching_dict.items(), key = operator.itemgetter(1))[0]
+        # Add the page to the set of its cluster 
         clusters[best_shingle].add(page_shingle_dict[shingle])
+        
 
-print(clusters)
