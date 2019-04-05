@@ -30,6 +30,7 @@ def vertex_clusterer(pruning, shingle):
 
         # Process every shingle vector without wildcards
         for vector in shingle_dict:
+                matching_vectors_dict = {}
                 if '*' not in vector:
                 # Given the dictionary with every matching vector, delete the vector with the highest count
                         matching_vectors_dict = utils.matching_vectors(vector, shingle_dict)
