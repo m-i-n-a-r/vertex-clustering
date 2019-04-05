@@ -23,10 +23,10 @@
 	- [x] Per ognuno prendiamo da H lo shingle che lo matcha ed ha punteggio massimo
 	- [x] Il punteggio dello shingle selezionato resta invariato, il punteggio degli altri shingle che matchano quello in esame è diminuito di un ammontare pari al punteggio dello shingle vector 8/8 in esame 
 	- [x] Cancello tutti gli shingle vector mascherati (quindi con 1 o più wildcard) in H con punteggio inferiore ad una soglia prestabilita (20)
-- [ ] Terzo passo
+- [x] Terzo passo
 	- [x] Per ogni shingle vector mascherato v in H creo un cluster vuoto ad esso relativo
 	- [x] Ogni pagina p con vettore v viene assegnata al cluster Cv’ dove v’ e il vettore shingle in H che combacia con v ed ha il massimo punteggio
-	- [ ] Ritorno i cluster con relativo shingle vector e il punteggio associato, e li visualizzo in qualche modo
+	- [x] Ritorno i cluster con relativo shingle vector e il punteggio associato, e li visualizzo in qualche modo (grafico e json salvati in locale)
 	
 ### Testing 
 - [ ] Run su diversi tipi di siti e calcolo di alcune metriche (coverage)
