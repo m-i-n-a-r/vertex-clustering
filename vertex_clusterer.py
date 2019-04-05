@@ -1,26 +1,28 @@
 import operator
 from collections import OrderedDict
-from shingle_utils import matching_vectors
+import shingle_utils as utils
 
-# input: a set of html files
-# output: a clusters-pages dictionary
+
+# Input: a set of html files
+# Output: a clusters-pages dictionary
 def vertex_clusterer(pruning, shingle):
         # NEEDED PARAMETERS
-        page_shingle_dict = {}
-        clusters = {}
-        shingle_dict = {}
-        pruning_treshold = 20 # default: 20
+        page_shingle_dict = {} # Shingle vector of the page : url or filename of the page
+        clusters = {} # Masked shingle vector which represents the cluster : set of pages in the cluster
+        shingle_dict = {} # Shingle vector or masked shingle vector : count
+        pruning_treshold = pruning # Default: 20
+        shingle_size = shingle # Default: 10
+
+        # STEP ZERO
+        # Prepare the set of pages to be computed
+        page_shingle_dict = utils.read_file(shingle_size)
 
         # STEP ONE
-        # Testing purpose
-        tuple_shingle1 = (198,202,163,100,56,7,180,98)
-        tuple_shingle2 = (102,3,4,5,96,'*',98,240)
-        tuple_shingle3 = (198,202,163,100,56,'*',180,'*')
-        tuple_shingle4 = (12,36,42,5,77,90,98,240)
-        shingle_dict[tuple_shingle1] = 24
-        shingle_dict[tuple_shingle2] = 1
-        shingle_dict[tuple_shingle3] = 30
-        shingle_dict[tuple_shingle4] = 2
+        # For every shingle, generate every 6/8, 7/8 and 8/8 shingles and masked shingles
+        # Given every shingle, build a shingle:count dictionary with the right counts
+        for vector in page_shingle_dict:
+	        temporary_dict = utils.generate_6_7_from_8_shingle_vec(vector)
+	        shingle_dict = utils.dict_shingle_occurencies(shingle_dict, temporary_dict)
 
         # STEP TWO
         # Order the dictionary by value
@@ -30,7 +32,7 @@ def vertex_clusterer(pruning, shingle):
         for vector in shingle_dict:
                 if '*' not in vector:
                 # Given the dictionary with every matching vector, delete the vector with the highest count
-                        matching_vectors_dict = matching_vectors(vector, shingle_dict)
+                        matching_vectors_dict = utils.matching_vectors(vector, shingle_dict)
                         del matching_vectors_dict[max(matching_vectors_dict.items(), key = operator.itemgetter(1))[0]]
                 # Decrease the count for every other matching vector
                 for key in matching_vectors_dict:
@@ -48,7 +50,7 @@ def vertex_clusterer(pruning, shingle):
 
         # For every shingle in the pages dictionary, find the matching masked shingle vector with the best score
         for shingle in page_shingle_dict:
-                matching_dict = matching_vectors(shingle, shingle_masked_dict)
+                matching_dict = utils.matching_vectors(shingle, shingle_masked_dict)
                 best_shingle = max(matching_dict.items(), key = operator.itemgetter(1))[0]
                 # Add the page to the set of its cluster 
                 clusters[best_shingle].add(page_shingle_dict[shingle])

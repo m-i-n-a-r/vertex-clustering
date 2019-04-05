@@ -13,11 +13,11 @@
 - [X] Funzione per verificare il match tra due shingle vectors (dove uno dei due può contenere wildcard)
 	
 #### Altro file (principale) che esegue l'algoritmo vero e proprio
-- [ ] Primo passo
-	- [ ] Prendo l'insieme delle pagine
-	- [ ] Per ogni pagina calcolo lo shingle vector 
-	- [ ] Genero tutti gli shingle vector con corrispondenza di 6/8, 7/8, 8/8 
-	- [ ] Per ogni shingle vector generato, lo inserisco nella hashtable con punteggio 1, o se già presente incremento il suo punteggio di 1
+- [x] Primo passo
+	- [x] Prendo l'insieme delle pagine
+	- [x] Per ogni pagina calcolo lo shingle vector (funzione ausiliaria) 
+	- [x] Genero tutti gli shingle vector con corrispondenza di 6/8, 7/8, 8/8 
+	- [x] Per ogni shingle vector generato, lo inserisco nella hashtable con punteggio 1, o se già presente incremento il suo punteggio di 1
 - [x] Secondo passo
 	- [x] Prendo ogni shingle vector con 8/8 in H (che corrisponderà a tutti gli shingle vector delle pagine in input), con punteggio crescente
 	- [x] Per ognuno prendiamo da H lo shingle che lo matcha ed ha punteggio massimo
