@@ -189,7 +189,7 @@ def generate_6_7_from_8_shingle_vec(shingle_vec):
 				if  m != n:
 					a = a + (key[n],)
 				else :
-					a = a+ ("*",)
+					a = a + ("*",)
 			H[a] = 0
 				
 	# Add the 8/8 shingle to the final dictionary

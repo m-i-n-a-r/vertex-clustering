@@ -36,8 +36,8 @@ def vertex_clusterer(pruning, shingle):
                         matching_vectors_dict = utils.matching_vectors(vector, shingle_dict)
                         del matching_vectors_dict[max(matching_vectors_dict.items(), key = operator.itemgetter(1))[0]]
                 # Decrease the count for every other matching vector
-                for key in matching_vectors_dict:
-                        shingle_dict[key] -= shingle_dict[vector]
+                        for key in matching_vectors_dict:
+                                shingle_dict[key] -= shingle_dict[vector]
                 
         # Delete every masked shingle vector with a count less than a given treshold
         shingle_dict = {key:val for key, val in shingle_dict.items() if val > pruning_treshold or '*' not in key}

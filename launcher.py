@@ -13,7 +13,7 @@ print("\nVertex Clusterer V " + version + "\n")
 try:
     treshold = input("Pruning treshold [blank for default] -> ")
     treshold = int(treshold)
-    if not 5 <= treshold <= 50: sys.exit("The number is too big, small or is not a number")
+    if not 0 <= treshold <= 50: sys.exit("The number is too big, small or is not a number")
 except:
     treshold = 20
     print("The number is too big, small or is not a number. The value was set to default.")
@@ -30,7 +30,7 @@ print("\n...computing...\n")
 #try:
 clusters = vertex_clusterer(treshold, shingle_size)
 #except:
-#    sys.exit("Something went wrong")
+#    sys.exit("Something went wrong: malformed or small pages, internal error.")
 
 if not clusters: 
     sys.exit("No cluster found.")
