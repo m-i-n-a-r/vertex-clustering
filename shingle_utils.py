@@ -139,7 +139,7 @@ def read_file(shingle_size):
 
         abs_file_path, filename = os.path.split(file)
         # Add filename in a dictionary where key is the shingle vector
-        page_shingle_dict[vector] = filename
+        page_shingle_dict[filename] = vector
 
     return page_shingle_dict
 
