@@ -4,16 +4,37 @@ import plotly as py
 import plotly.graph_objs as go
 from vertex_clusterer import vertex_clusterer
 
-version = "0.1"
+version = "0.2"
 clusters = {}
 
-# Ask for the treshold and shingle size
+# Set the values to avoid null arguments
+name = ""
+file_number = 300
+
 print("\nVertex Clusterer V " + version + "\n")
 
+# Ask for the source
+source_type = input("\nSource: c for csv, f for pages folder [blank for default] -> ")
+if source_type == 'c' or source_type == 'C':
+    try:
+        name = input("\nFile name, with extension -> ")
+        file_number = input("\nNumber of links to scan in the file [blank for default] -> ")
+        file_number = int(file_number)
+    except:
+        print("Incorrect or empty value. The default will be used.")
+        file_number = 300
+elif source_type == 'f' or source_type == 'F':
+    pass
+else:
+    source_type = 'f'
+    print("Wrong values. Source set to file.")
+
+# Ask for the treshold and shingle size
 try:
-    treshold = input("Pruning treshold [blank for default] -> ")
+    treshold = input("\nPruning treshold [blank for default] -> ")
     treshold = int(treshold)
-    if not 0 <= treshold <= 50: sys.exit("The number is too big, small or is not a number")
+    if not 0 <= treshold <= 50:
+        sys.exit()
 except:
     treshold = 20
     print("The number is too big, small or is not a number. The value was set to default.")
@@ -21,18 +42,21 @@ except:
 try:
     shingle_size = input("\nShingle size [blank for default] -> ")
     shingle_size = int(shingle_size)
-    if not 5 <= shingle_size <= 50: sys.exit("The number is too big, small or is not a number")
+    if not 5 <= shingle_size <= 50:
+        sys.exit()
 except:
     shingle_size = 10
     print("The number is too big, small or is not a number. The value was set to default.")
 
 print("\n...computing...\n")
-try:
-    clusters = vertex_clusterer(treshold, shingle_size)
-except:
-    print("Something went wrong: malformed or small pages, internal error.")
 
-if not clusters: 
+# Execute the algorithm
+# try:
+clusters = vertex_clusterer(treshold, shingle_size, source_type, name, file_number)
+# except:
+#    print("Something went wrong: malformed or small pages, internal error.")
+
+if not clusters:
     sys.exit("\nNo cluster found or failure.")
 
 # Preparing the coordinates and the colorscale
@@ -45,7 +69,7 @@ for cluster in clusters:
     json_ready_dict[str(cluster)] = list(clusters[cluster])
     shingle_of_cluster.append(str(cluster))
 
-for i in range(0,len(shingle_of_cluster)): 
+for i in range(0, len(shingle_of_cluster)):
     colors.append(i)
 
 # Preparing the chart
@@ -53,11 +77,11 @@ data = [go.Bar(
     x = shingle_of_cluster,
     y = pages_in_cluster,
     name = 'Vertex Clustering',
-       marker = {
+    marker = {
         'color': colors,
         # Colorscale type. Other possible options below
         # Blackbody Bluered Blues Earth Electric Greens Greys Hot Jet Picnic Portland Rainbow RdBu Reds Viridis YlGnBu YlOrRd
-        'colorscale': 'Viridis' 
+        'colorscale': 'Viridis'
     }
 )]
 
@@ -65,13 +89,13 @@ config = {
     'scrollZoom': True,
     'displaylogo': False,
     'watermark': False
-    }
+}
 
 layout = go.Layout(
     title = 'Vertex Clustering',
     xaxis = dict(
         title = 'CLUSTERS - TOTAL: ' + str(len(colors)),
-            titlefont = dict(
+        titlefont = dict(
             family = 'Arial, sans-serif',
             size = 18,
             color = '#777777'
@@ -82,24 +106,24 @@ layout = go.Layout(
     ),
     yaxis = dict(
         title = 'NUMBER OF PAGES',
-            titlefont = dict(
+        titlefont = dict(
             family = 'Arial, sans-serif',
             size = 18,
             color = '#777777'
         ),
         rangemode = 'nonnegative',
         autorange = True
-    ), 
+    )
 )
 
 # Printing and saving the chart
 fig = go.Figure(data = data, layout = layout)
-py.offline.plot(fig, filename = 'clusters.html', config = config)
+py.offline.plot(fig, filename='clusters.html', config=config)
 
 # Write the clusters in a json file
 json_ready_dict = {'Clusters': json_ready_dict}
 with open('clusters.json', 'w') as file:
-     file.write(json.dumps(json_ready_dict))
+    file.write(json.dumps(json_ready_dict))
 
 # All done, confirmation message
 print("\nDone. The plot is in the current folder, as well as a json containing every cluster and its set of pages.\n")

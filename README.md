@@ -33,7 +33,6 @@
 
 ## Bugs
 - Provando a inserire tag di tipo script in modo casuale, il metodo per determinare lo shingle vector fallisce. Potrebbe dare problemi con pagine malformate.
-- Facendo elaborare allo script una cartella contenente 10 pagine html, tutte e 10 vengono lette ma solo 9 arrivano al termine dell'elaborazione (si creano 9 cluster con 1 pagina ciascuno o comunque un numero di cluster la cui somma delle pagine fa 9).
 - Mancano alcuni errori da gestire e un modo per elaborare i file a partire dal link.
 	
 	

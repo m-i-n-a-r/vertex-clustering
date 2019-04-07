@@ -5,6 +5,8 @@ from bs4 import BeautifulSoup
 import random
 from crccheck.crc import Crc8
 import glob
+import csv
+import sys
 
 # Input: an URL
 # Output: a list of tags in HTML Page
@@ -12,6 +14,7 @@ def get_tag_from_url(url):
     headers = {
         'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36'
     }
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
     tagList = []
 
     try:
@@ -32,7 +35,7 @@ def get_tag_from_url(url):
                 break
 
     except Exception as e:
-        print (e)
+        print(e)
 
 # Input: an HTML Page
 # Output: a list of tags in HTML Page
@@ -80,7 +83,8 @@ def pick_random_coeffs(k):
 
     return rand_list
 
-#Coefficients for hash function
+
+# Coefficients for hash function
 coeffA = pick_random_coeffs(8)
 coeffB = pick_random_coeffs(8)
 
@@ -88,41 +92,40 @@ coeffB = pick_random_coeffs(8)
 # Where 'x' is the input value, 'a' and 'b' are random coefficients, and 'c' is
 # a prime number just greater than maxShingleID.
 def hash_tuple1(x):
-    return ((coeffA[0]*x)+coeffB[0])%max_shingle_ID
+    return ((coeffA[0] * x) + coeffB[0]) % max_shingle_ID
 
 def hash_tuple2(x):
-    return ((coeffA[1]*x)+coeffB[1])%max_shingle_ID
+    return ((coeffA[1] * x) + coeffB[1]) % max_shingle_ID
 
 def hash_tuple3(x):
-    return ((coeffA[2]*x)+coeffB[2])%max_shingle_ID
+    return ((coeffA[2] * x) + coeffB[2]) % max_shingle_ID
 
 def hash_tuple4(x):
-    return ((coeffA[3]*x)+coeffB[3])%max_shingle_ID
+    return ((coeffA[3] * x) + coeffB[3]) % max_shingle_ID
 
 def hash_tuple5(x):
-    return ((coeffA[4]*x)+coeffB[4])%max_shingle_ID
+    return ((coeffA[4] * x) + coeffB[4]) % max_shingle_ID
 
 def hash_tuple6(x):
-    return ((coeffA[5]*x)+coeffB[5])%max_shingle_ID
+    return ((coeffA[5] * x) + coeffB[5]) % max_shingle_ID
 
 def hash_tuple7(x):
-    return ((coeffA[6]*x)+coeffB[6])%max_shingle_ID
+    return ((coeffA[6] * x) + coeffB[6]) % max_shingle_ID
 
 def hash_tuple8(x):
-    return ((coeffA[7]*x)+coeffB[7])%max_shingle_ID
+    return ((coeffA[7] * x) + coeffB[7]) % max_shingle_ID
 # END Hash Function
 
 # Apply 8 independet hash function to the set of CRC 8 hash string of l tag
 def get_vector(tag_set):
-    return  min(map(hash_tuple1, tag_set)),min(map(hash_tuple2, tag_set)),min(map(hash_tuple3, tag_set)),min(map(hash_tuple4, tag_set)),min(map(hash_tuple5, tag_set)),min(map(hash_tuple6, tag_set)),min(map(hash_tuple7, tag_set)),min(map(hash_tuple8, tag_set))
+    return min(map(hash_tuple1, tag_set)), min(map(hash_tuple2, tag_set)), min(map(hash_tuple3, tag_set)), min(map(hash_tuple4, tag_set)), min(map(hash_tuple5, tag_set)), min(map(hash_tuple6, tag_set)), min(map(hash_tuple7, tag_set)), min(map(hash_tuple8, tag_set))
 
-
-# Main method to generate the shingle:page dictionary
+# Main method to generate the shingle:page dictionary starting from a directory
 def read_file(shingle_size):
     page_shingle_dict = {}
 
     # Path containing http pages
-    script_dir = os.path.dirname(__file__) # Absolute dir the script is in
+    script_dir = os.path.dirname(__file__)  # Absolute dir the script is in
     rel_path = "pages/*.html"
     abs_file_path = os.path.join(script_dir, rel_path)
     files = glob.glob(abs_file_path)
@@ -137,6 +140,33 @@ def read_file(shingle_size):
         abs_file_path, filename = os.path.split(file)
         # Add filename in a dictionary where key is the shingle vector
         page_shingle_dict[vector] = filename
+
+    return page_shingle_dict
+
+# Main method to generate the shingle:page dictionary starting from a csv
+def read_csv(shingle_size, csvname, linknumber):
+    page_shingle_dict = {}
+    rownumber = 0  
+    try:
+        open(csvname)
+    except:
+        sys.exit("File not found!")    
+    # Path containing http pages
+    with open(csvname) as csvfile:
+        reader = csv.DictReader(csvfile)
+        # For each row, read the second link
+        for row in reader:
+            rownumber = rownumber + 1
+            url = list(row.values())[1]
+            tag_list = get_tag_from_url(url)
+            # Get shingle vector from the set of l consecutive tags
+            vector = get_vector(get_set(tag_list, shingle_size))
+            # Add filename in a dictionary where key is the shingle vector
+            page_shingle_dict[vector] = url
+
+            print(rownumber) # TODO probably useless
+            if rownumber == linknumber:
+                break
 
     return page_shingle_dict
 
@@ -163,51 +193,48 @@ def match(s1, s2):
 # Input: a shingle vector
 # Output: dictionary containing every masked shingle vector with a count of 0
 def generate_6_7_from_8_shingle_vec(shingle_vec):
-	
-        # Initialize the final dictionary and a temporary dictionary
-	H = {}
-	H_temp = {}
-	
-	shingle_dict={shingle_vec:0}
-	
-        # For each 8/8 shingle, replace an element with a wildcard for each element and add the result to the temporary dictionary
-	for key in shingle_dict:
-		for m in range(8):
-			a = ()
-			for n in range(8):
-				if  m != n:
-					a = a + (key[n],)
-				else :
-					a = a + ("*",)
-			H_temp[a] = 0
-	
-        # For each 7/8 shingle, replace an element with a wildcard for each element and add the result to the final dictionary
-	for key in H_temp.keys():
-		for m in range(8):
-			a = ()
-			for n in range(8):
-				if  m != n:
-					a = a + (key[n],)
-				else :
-					a = a + ("*",)
-			H[a] = 0
-				
-	# Add the 8/8 shingle to the final dictionary
-	H[shingle_vec] = 0
-	return H
+    # Initialize the final dictionary and a temporary dictionary
+    H = {}
+    H_temp = {}
 
-# Input: the final dictionary (shingle:count), another shingle dictionary 
-# Output: a shingle:count dictionary with the right counts  	
-def dict_shingle_occurencies(H,a):
-	
-	for key in a:
-		x = H.get(key)
-		if x == None:
-			H[key] = 1
-		else:
-			y = H.get(key)
-			y = y+1
-			H[key] = y
-	return H
+    shingle_dict = {shingle_vec: 0}
 
+    # For each 8/8 shingle, replace an element with a wildcard for each element and add the result to the temporary dictionary
+    for key in shingle_dict:
+        for m in range(8):
+            a = ()
+            for n in range(8):
+                if m != n:
+                    a = a + (key[n],)
+                else:
+                    a = a + ("*",)
+            H_temp[a] = 0
 
+    # For each 7/8 shingle, replace an element with a wildcard for each element and add the result to the final dictionary
+    for key in H_temp.keys():
+        for m in range(8):
+            a = ()
+            for n in range(8):
+                if m != n:
+                    a = a + (key[n],)
+                else:
+                    a = a + ("*",)
+            H[a] = 0
+
+    # Add the 8/8 shingle to the final dictionary
+    H[shingle_vec] = 0
+    return H
+
+# Input: the final dictionary (shingle:count), another shingle dictionary
+# Output: a shingle:count dictionary with the right counts
+def dict_shingle_occurencies(H, a):
+
+    for key in a:
+        x = H.get(key)
+        if x == None:
+            H[key] = 1
+        else:
+            y = H.get(key)
+            y = y+1
+            H[key] = y
+    return H
