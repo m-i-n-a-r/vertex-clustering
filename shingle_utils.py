@@ -179,6 +179,7 @@ def read_csv(shingle_size, csvname, linknumber):
                 if rownumber == linknumber:
                     break
 
+    print (page_shingle_dict)
     return page_shingle_dict
 
 # Input: a shingle vector and a dictionary containing every shingle and its count
