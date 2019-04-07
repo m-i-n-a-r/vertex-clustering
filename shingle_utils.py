@@ -162,7 +162,7 @@ def read_csv(shingle_size, csvname, linknumber):
             # Get shingle vector from the set of l consecutive tags
             vector = get_vector(get_set(tag_list, shingle_size))
             # Add filename in a dictionary where key is the shingle vector
-            page_shingle_dict[vector] = url
+            page_shingle_dict[url] = vector
 
             print(rownumber) # TODO probably useless
             if rownumber == linknumber:
