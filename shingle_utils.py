@@ -7,6 +7,8 @@ from crccheck.crc import Crc8
 import glob
 import csv
 import sys
+from random import randint
+from time import sleep
 
 # Input: an URL
 # Output: a list of tags in HTML Page
@@ -19,7 +21,7 @@ def get_tag_from_url(url):
 
     try:
         # Retrying for failed requests
-        for i in range(1):
+        for i in range(10):
             # Generating random delays
             #sleep(randint(1, 3))
             # Adding verify = False to avold ssl related issues
@@ -49,16 +51,20 @@ def get_tag(html):
 # Input: list of tags in the html page, l window space
 # Output: a set of CRC 8 hashed string. String are made from each l consecutive tags in the html page.
 def get_set(tag_list, l):
-    n = l - 1
-    tag_set = set()
-    for i in range(len(tag_list) - n):
-        # Hash the shingle to a 8-bit
-        str = ' '.join(tag_list[i:i + l])
-        # CRC 8 Hash
-        crc = Crc8.calc(str.encode('utf-8'))
-        tag_set.add(crc)
-    return tag_set
-
+    if tag_list is not None:
+        list_size = len(tag_list)
+        n = l - 1
+        tag_set = set()
+        if (list_size - n)>0 and tag_list is not None:
+            for i in range(len(tag_list) - n):
+                # Hash the shingle to a 8-bit
+                str = ' '.join(tag_list[i:i + l])
+                # CRC 8 Hash
+                crc = Crc8.calc(str.encode('utf-8'))
+                tag_set.add(crc)
+            return tag_set
+        else:
+            return tag_set
 
 max_shingle_ID = 2 ** 8 - 1
 next_prime = 257
@@ -135,11 +141,14 @@ def read_file(shingle_size):
             # Take tags from the HTML page
             tag_list = get_tag(fp)
         # Get shingle vector from the set of l consecutive tags
-        vector = get_vector(get_set(tag_list, shingle_size))
+        if tag_list:
+            tag_set = get_set(tag_list, shingle_size)
+            if tag_set:
+                vector = get_vector(tag_set)
 
-        abs_file_path, filename = os.path.split(file)
-        # Add filename in a dictionary where key is the shingle vector
-        page_shingle_dict[filename] = vector
+                abs_file_path, filename = os.path.split(file)
+                # Add filename in a dictionary where key is the shingle vector
+                page_shingle_dict[filename] = vector
 
     return page_shingle_dict
 
@@ -156,17 +165,19 @@ def read_csv(shingle_size, csvname, linknumber):
         reader = csv.DictReader(csvfile)
         # For each row, read the second link
         for row in reader:
-            rownumber = rownumber + 1
             url = list(row.values())[1]
             tag_list = get_tag_from_url(url)
-            # Get shingle vector from the set of l consecutive tags
-            vector = get_vector(get_set(tag_list, shingle_size))
-            # Add filename in a dictionary where key is the shingle vector
-            page_shingle_dict[url] = vector
-
-            print(rownumber) # TODO probably useless
-            if rownumber == linknumber:
-                break
+            if tag_list is not None:
+                # Get shingle vector from the set of l consecutive tags
+                tag_set = get_set(tag_list, shingle_size)
+                if tag_set:
+                    vector = get_vector(tag_set)
+                    # Add filename in a dictionary where key is the shingle vector
+                    page_shingle_dict[url] = vector
+                    rownumber = rownumber + 1
+                    print(rownumber) # TODO probably useless
+                if rownumber == linknumber:
+                    break
 
     return page_shingle_dict
 
