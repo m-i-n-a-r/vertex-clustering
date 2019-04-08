@@ -1,16 +1,16 @@
 # Vertex Clustering
 
-## Status - WIP
+## Status - V 0.2
 
 ## TODO list
 #### Passi preliminari ed algoritmi di supporto
-- [ ] Avere tutte le pagine di un sito in un file (csv, xml)
-- [ ] Funzione che seleziona casualmente il 20% delle pagine disponibili nel csv sopra
-- [X] File che, data una pagina, calcola l'insieme degli shingle e il conseguente vettore di 8 byte
-	- [X] Data una pagina prendo tutti i subset di tag (sia aperti che chiusi) di lunghezza l=10
-	- [X] Applico a ciascun subset le 8 funzioni di hash (da definire)
-	- [X] Prendo il minimo per ciascuna funzione di hash e genero il vettore
-- [X] Funzione per verificare il match tra due shingle vectors (dove uno dei due può contenere wildcard)
+- [x] Avere tutte le pagine di un sito in un file (csv, xml)
+- [x] Funzione che seleziona casualmente il 20% delle pagine disponibili nel csv sopra
+- [x] File che, data una pagina, calcola l'insieme degli shingle e il conseguente vettore di 8 byte
+	- [x] Data una pagina prendo tutti i subset di tag (sia aperti che chiusi) di lunghezza l=10
+	- [x] Applico a ciascun subset le 8 funzioni di hash (da definire)
+	- [x] Prendo il minimo per ciascuna funzione di hash e genero il vettore
+- [x] Funzione per verificare il match tra due shingle vectors (dove uno dei due può contenere wildcard)
 	
 #### Altro file (principale) che esegue l'algoritmo vero e proprio
 - [x] Primo passo
@@ -29,10 +29,23 @@
 	- [x] Ritorno i cluster con relativo shingle vector e il punteggio associato, e li visualizzo in qualche modo (grafico e json salvati in locale)
 	
 ### Testing 
-- [ ] Run su diversi tipi di siti e calcolo di alcune metriche (coverage)
+- [ ] Run su 5 diversi tipi di siti e calcolo di metriche ove possibile
+	- [ ] Thingiverse
+	- [ ] Zalando
+	- [ ] AndroidWorld
+	- [ ] tbd
+	- [ ] tbd
 
 ## Bugs
 - Provando a inserire tag di tipo script in modo casuale, il metodo per determinare lo shingle vector fallisce. Potrebbe dare problemi con pagine malformate.
-- Mancano alcuni errori da gestire e un modo per elaborare i file a partire dal link.
+- Il grafico generato potrebbe non rappresentare un buon clustering.
+
+## External libraries
+- Scrapy
+- Bs4
+- Operator
+- Plotly
+- Urllib3
+- Crccheck
 	
 	
