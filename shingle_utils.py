@@ -135,6 +135,7 @@ def read_file(shingle_size):
     rel_path = "pages/*.html"
     abs_file_path = os.path.join(script_dir, rel_path)
     files = glob.glob(abs_file_path)
+    filenumber = 0
 
     for file in files:
         with open(file) as fp:
@@ -145,7 +146,8 @@ def read_file(shingle_size):
             tag_set = get_set(tag_list, shingle_size)
             if tag_set:
                 vector = get_vector(tag_set)
-
+                filenumber += 1
+                print(filenumber)
                 abs_file_path, filename = os.path.split(file)
                 # Add filename in a dictionary where key is the shingle vector
                 page_shingle_dict[filename] = vector
@@ -174,12 +176,11 @@ def read_csv(shingle_size, csvname, linknumber):
                     vector = get_vector(tag_set)
                     # Add filename in a dictionary where key is the shingle vector
                     page_shingle_dict[url] = vector
-                    rownumber = rownumber + 1
-                    print(rownumber) # TODO probably useless
+                    rownumber += 1
+                    print(rownumber) # Current iteration
                 if rownumber == linknumber:
                     break
 
-    print (page_shingle_dict)
     return page_shingle_dict
 
 # Input: a shingle vector and a dictionary containing every shingle and its count

@@ -29,8 +29,8 @@ def vertex_clusterer(pruning, shingle, source_type, name, link_number):
 
     # STEP TWO
     # Order the dictionary by value
-    shingle_dict = OrderedDict(
-        sorted(shingle_dict.items(), key=operator.itemgetter(1)))
+    shingle_dict = OrderedDict(sorted(shingle_dict.items(), key = operator.itemgetter(1)))
+    print(shingle_dict) # TODO remove
 
     # Process every shingle vector without wildcards
     for vector in shingle_dict:
@@ -40,13 +40,14 @@ def vertex_clusterer(pruning, shingle, source_type, name, link_number):
             matching_vectors_dict = utils.matching_vectors(
                 vector, shingle_dict)
             del matching_vectors_dict[max(
-                matching_vectors_dict.items(), key=operator.itemgetter(1))[0]]
-        # Decrease the count for every other matching vector
+                matching_vectors_dict.items(), key = operator.itemgetter(1))[0]]
+            # Decrease the count for every other matching vector (only if masked)
             for key in matching_vectors_dict:
-                shingle_dict[key] -= shingle_dict[vector]
+                if '*' in key:
+                    shingle_dict[key] -= shingle_dict[vector]
 
     # Delete every masked shingle vector with a count less than a given treshold
-    shingle_dict = {key: val for key, val in shingle_dict.items() if val > pruning_treshold or '*' not in key}
+    shingle_dict = {key: val for key, val in shingle_dict.items() if val >= pruning_treshold or '*' not in key}
 
     # STEP THREE
     # Put every masked vector in a new dictionary
@@ -69,13 +70,13 @@ def vertex_clusterer(pruning, shingle, source_type, name, link_number):
         matching_dict = utils.matching_vectors(page_shingle_dict.get(page), shingle_masked_dict)
 
         best_score = 0
-        best_shingle = (0, 0, 0, 0, 0, 0, 0, 0)
         for shingle in matching_dict:
-            if matching_dict.get(shingle)>best_score:
-                best_score=matching_dict.get(shingle)
+            if matching_dict.get(shingle) > best_score:
+                best_score = matching_dict.get(shingle)
                 best_shingle = shingle
 
         # Add the page to the set of its cluster
         clusters[best_shingle].add(page)
+
     # Return the dictionary
     return clusters

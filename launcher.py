@@ -51,10 +51,10 @@ except:
 print("\n...computing...\n")
 
 # Execute the algorithm
-# try:
+#try:
 clusters = vertex_clusterer(treshold, shingle_size, source_type, name, file_number)
-# except:
-#    print("Something went wrong: malformed or small pages, internal error.")
+#except Exception as e:
+#    print(e)
 
 if not clusters:
     sys.exit("\nNo cluster found or failure.")
@@ -118,7 +118,7 @@ layout = go.Layout(
 
 # Printing and saving the chart
 fig = go.Figure(data = data, layout = layout)
-py.offline.plot(fig, filename='clusters.html', config=config)
+py.offline.plot(fig, filename = 'clusters.html', config = config)
 
 # Write the clusters in a json file
 json_ready_dict = {'Clusters': json_ready_dict}
