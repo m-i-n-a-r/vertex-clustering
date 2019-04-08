@@ -58,10 +58,14 @@ def vertex_clusterer(pruning, shingle, source_type, name, link_number):
         
     # For every shingle in the pages dictionary, find the matching masked shingle vector with the best score
     for page in page_shingle_dict:
-        matching_dict = utils.matching_vectors(page_shingle_dict[page], shingle_masked_dict)
-        best_shingle = max(matching_dict.items(), key = operator.itemgetter(1))[0]
-        # Add the page to the set of its cluster
-        clusters[best_shingle].add(page)
+        # After the pruning, a shingle without matching vectors could exist. Ignore those vectors
+        try:
+            matching_dict = utils.matching_vectors(page_shingle_dict[page], shingle_masked_dict)
+            best_shingle = max(matching_dict.items(), key = operator.itemgetter(1))[0]
+            # Add the page to the set of its cluster
+            clusters[best_shingle].add(page)
+        except:
+            continue
 
     # Remove empty clusters 
     clusters = {key: val for key, val in clusters.items() if val}
