@@ -21,14 +21,15 @@ def get_tag_from_url(url):
 
     try:
         # Retrying for failed requests
-        for i in range(10):
+        for _ in range(1): 
             # Generating random delays
             #sleep(randint(1, 3))
             # Adding verify = False to avold ssl related issues
             response = requests.get(url, headers = headers, verify = False)
 
             if response.status_code == 200:
-                soup = BeautifulSoup(response.content, 'html.parser')
+                # Trying to avoid wrong decoding and replacement characters
+                soup = BeautifulSoup(response.content, 'html.parser', from_encoding="iso-8859-1")
                 for tag in soup.find_all():
                     tagList.append(tag.name)
                 return tagList
@@ -89,7 +90,6 @@ def pick_random_coeffs(k):
 
     return rand_list
 
-
 # Coefficients for hash function
 coeffA = pick_random_coeffs(8)
 coeffB = pick_random_coeffs(8)
@@ -137,6 +137,9 @@ def read_file(shingle_size):
     files = glob.glob(abs_file_path)
     filenumber = 0
 
+    if(not files):
+        sys.exit("The folder is empty!")
+
     for file in files:
         with open(file) as fp:
             # Take tags from the HTML page
@@ -165,9 +168,10 @@ def read_csv(shingle_size, csvname, linknumber):
     # Path containing http pages
     with open(csvname) as csvfile:
         reader = csv.DictReader(csvfile)
+
         # For each row, read the second link
         for row in reader:
-            url = list(row.values())[1]
+            url = list(row.values())[0]
             tag_list = get_tag_from_url(url)
             if tag_list is not None:
                 # Get shingle vector from the set of l consecutive tags

@@ -33,7 +33,7 @@ else:
 try:
     treshold = input("\nPruning treshold [blank for default] -> ")
     treshold = int(treshold)
-    if not 0 <= treshold <= 50:
+    if not 1 <= treshold <= 50:
         sys.exit()
 except:
     treshold = 20

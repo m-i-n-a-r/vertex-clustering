@@ -30,7 +30,6 @@ def vertex_clusterer(pruning, shingle, source_type, name, link_number):
     # STEP TWO
     # Order the dictionary by value
     shingle_dict = OrderedDict(sorted(shingle_dict.items(), key = operator.itemgetter(1)))
-    print(shingle_dict) # TODO remove
 
     # Process every shingle vector without wildcards
     for vector in shingle_dict:
@@ -52,31 +51,20 @@ def vertex_clusterer(pruning, shingle, source_type, name, link_number):
     # STEP THREE
     # Put every masked vector in a new dictionary
     shingle_masked_dict = {key: val for key, val in shingle_dict.items() if '*' in key}
-    # Initialite the clusters to an empty set
+
+    # Initialize the clusters to an empty set
     for masked_vector in shingle_masked_dict:
         clusters[masked_vector] = set()
-
-    # For every shingle in the pages dictionary, find the matching masked shingle vector with the best score
- #   for shingle in page_shingle_dict:
- #       matching_dict = utils.matching_vectors(shingle, shingle_masked_dict)
- #       best_shingle = max(matching_dict.items(), key = operator.itemgetter(1))[0]
- #       # Add the page to the set of its cluster
- #       clusters[best_shingle].add(page_shingle_dict[shingle])
-    # Return the dictionary
- #   return clusters
-
+        
     # For every shingle in the pages dictionary, find the matching masked shingle vector with the best score
     for page in page_shingle_dict:
-        matching_dict = utils.matching_vectors(page_shingle_dict.get(page), shingle_masked_dict)
-
-        best_score = 0
-        for shingle in matching_dict:
-            if matching_dict.get(shingle) > best_score:
-                best_score = matching_dict.get(shingle)
-                best_shingle = shingle
-
+        matching_dict = utils.matching_vectors(page_shingle_dict[page], shingle_masked_dict)
+        best_shingle = max(matching_dict.items(), key = operator.itemgetter(1))[0]
         # Add the page to the set of its cluster
         clusters[best_shingle].add(page)
+
+    # Remove empty clusters 
+    clusters = {key: val for key, val in clusters.items() if val}
 
     # Return the dictionary
     return clusters
