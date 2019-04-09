@@ -59,7 +59,7 @@ except:
     shingle_size = 10
     print("The number is too big, small or is not a number. Default set (10).")
 
-print("\n...computing...\n")
+print("\n...COMPUTING...\n")
 
 # Execute the algorithm
 try:
@@ -68,7 +68,7 @@ except Exception as e:
     print(e)
 
 if not clusters:
-    sys.exit("\nNo cluster found or failure.")
+    sys.exit("\nNo cluster found or failure.\n")
 
 # Preparing the coordinates and the colorscale
 json_ready_dict = {}

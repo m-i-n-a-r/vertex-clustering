@@ -140,20 +140,24 @@ def read_file(shingle_size):
     if(not files):
         sys.exit("The folder is empty!")
 
-    for file in files:
-        with open(file) as fp:
-            # Take tags from the HTML page
-            tag_list = get_tag(fp)
-        # Get shingle vector from the set of l consecutive tags
-        if tag_list:
-            tag_set = get_set(tag_list, shingle_size)
-            if tag_set:
-                vector = get_vector(tag_set)
-                filenumber += 1
-                print(filenumber)
-                abs_file_path, filename = os.path.split(file)
-                # Add filename in a dictionary where key is the shingle vector
-                page_shingle_dict[filename] = vector
+    try:
+        for file in files:
+            with open(file) as fp:
+                # Take tags from the HTML page
+                tag_list = get_tag(fp)
+            # Get shingle vector from the set of l consecutive tags
+            if tag_list:
+                tag_set = get_set(tag_list, shingle_size)
+                if tag_set:
+                    vector = get_vector(tag_set)
+                    filenumber += 1
+                    print(filenumber)
+                    abs_file_path, filename = os.path.split(file)
+                    # Add filename in a dictionary where key is the shingle vector
+                    page_shingle_dict[filename] = vector
+    except KeyboardInterrupt:
+        print("\nKeyboard interrupt. Calculating partial results...")
+        return page_shingle_dict
 
     return page_shingle_dict
 
@@ -169,21 +173,25 @@ def read_csv(shingle_size, csvname, linknumber):
     with open(csvname) as csvfile:
         reader = csv.DictReader(csvfile)
 
-        # For each row, read the second link
-        for row in reader:
-            url = list(row.values())[0]
-            tag_list = get_tag_from_url(url)
-            if tag_list is not None:
-                # Get shingle vector from the set of l consecutive tags
-                tag_set = get_set(tag_list, shingle_size)
-                if tag_set:
-                    vector = get_vector(tag_set)
-                    # Add filename in a dictionary where key is the shingle vector
-                    page_shingle_dict[url] = vector
-                    rownumber += 1
-                    print(rownumber) # Current iteration
-                if rownumber == linknumber:
-                    break
+    # For each row, read the second link
+        try:
+            for row in reader:
+                url = list(row.values())[0]
+                tag_list = get_tag_from_url(url)
+                if tag_list is not None:
+                    # Get shingle vector from the set of l consecutive tags
+                    tag_set = get_set(tag_list, shingle_size)
+                    if tag_set:
+                        vector = get_vector(tag_set)
+                        # Add filename in a dictionary where key is the shingle vector
+                        page_shingle_dict[url] = vector
+                        rownumber += 1
+                        print(rownumber) # Current iteration
+                    if rownumber == linknumber:
+                        break
+        except KeyboardInterrupt:
+            print("\nKeyboard interrupt. Calculating partial results...")
+            return page_shingle_dict
 
     return page_shingle_dict
 
