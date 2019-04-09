@@ -1,4 +1,5 @@
 import sys
+import csv
 import json
 import plotly as py
 import plotly.graph_objs as go
@@ -21,13 +22,23 @@ if source_type == 'c' or source_type == 'C':
         file_number = input("\nNumber of links to scan in the file [blank for default] -> ")
         file_number = int(file_number)
     except:
-        print("Incorrect or empty value. The default will be used.")
-        file_number = 300
+        print("Incorrect or empty value. Default set (20 percent of the site or 2000)")
+        try:
+            csv = open(name)
+        except:
+            sys.exit("File not found!")    
+        
+        # Calculate the default value (20% of the site, and 2000 if 20% < 2000)
+        row_count = sum(1 for row in csv)
+        file_number = row_count // 5
+        if file_number < 2000:
+            file_number = 2000
+
 elif source_type == 'f' or source_type == 'F':
     pass
 else:
     source_type = 'f'
-    print("Wrong values. Source set to file.")
+    print("Wrong values. Default set (/pages folder).")
 
 # Ask for the treshold and shingle size
 try:
@@ -37,7 +48,7 @@ try:
         sys.exit()
 except:
     treshold = 20
-    print("The number is too big, small or is not a number. The value was set to default.")
+    print("The number is too big, small or is not a number. Default set (20).")
 
 try:
     shingle_size = input("\nShingle size [blank for default] -> ")
@@ -46,15 +57,15 @@ try:
         sys.exit()
 except:
     shingle_size = 10
-    print("The number is too big, small or is not a number. The value was set to default.")
+    print("The number is too big, small or is not a number. Default set (10).")
 
 print("\n...computing...\n")
 
 # Execute the algorithm
-#try:
-clusters = vertex_clusterer(treshold, shingle_size, source_type, name, file_number)
-#except Exception as e:
-#    print(e)
+try:
+    clusters = vertex_clusterer(treshold, shingle_size, source_type, name, file_number)
+except Exception as e:
+    print(e)
 
 if not clusters:
     sys.exit("\nNo cluster found or failure.")

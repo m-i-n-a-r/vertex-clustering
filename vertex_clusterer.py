@@ -2,7 +2,6 @@ import operator
 from collections import OrderedDict
 import shingle_utils as utils
 
-
 # Input: a set of html files
 # Output: a clusters-pages dictionary
 def vertex_clusterer(pruning, shingle, source_type, name, link_number):
