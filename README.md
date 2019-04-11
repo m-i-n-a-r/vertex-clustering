@@ -15,4 +15,11 @@
 - [Test csv](https://github.com/m-i-n-a-r/vertex-clustering/tree/test-assets)
 - [Presentation (italian)](https://github.com/m-i-n-a-r/vertex-clustering/blob/test-assets/VerClusteringIT.pptx)
 
+## Authors
+- Gianluca Conti
+- Dario Di Nardo
+- Daria Marone
+- Niccolò Regini
+
+
 	
